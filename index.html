@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StockFlow | Maqueta inicial</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>StockFlow</h1>
+        <p>Control de stock · Maqueta inicial</p>
+      </div>
+      <button class="btn btn-primary">+ Nuevo producto</button>
+    </header>
+
+    <main class="layout">
+      <aside class="card filters">
+        <h2>Filtros</h2>
+        <label>
+          Buscar
+          <input type="search" placeholder="Nombre o SKU" />
+        </label>
+        <label>
+          Categoría
+          <select>
+            <option>Todas</option>
+            <option>Bebidas</option>
+            <option>Alimentos</option>
+            <option>Limpieza</option>
+          </select>
+        </label>
+        <label>
+          Estado
+          <select>
+            <option>Todos</option>
+            <option>Stock alto</option>
+            <option>Stock bajo</option>
+            <option>Crítico</option>
+          </select>
+        </label>
+      </aside>
+
+      <section class="content">
+        <section class="stats-grid">
+          <article class="card stat">
+            <p>Total productos</p>
+            <strong>128</strong>
+          </article>
+          <article class="card stat">
+            <p>Unidades en stock</p>
+            <strong>3.402</strong>
+          </article>
+          <article class="card stat warning">
+            <p>Productos en stock bajo</p>
+            <strong>18</strong>
+          </article>
+          <article class="card stat danger">
+            <p>Productos críticos</p>
+            <strong>5</strong>
+          </article>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <h2>Inventario actual</h2>
+            <div class="actions">
+              <button class="btn">Exportar CSV</button>
+              <button class="btn btn-primary">Ajustar stock</button>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>SKU</th>
+                <th>Categoría</th>
+                <th>Stock</th>
+                <th>Mínimo</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Agua Mineral 500ml</td>
+                <td>AG-500</td>
+                <td>Bebidas</td>
+                <td>240</td>
+                <td>80</td>
+                <td><span class="chip ok">Stock alto</span></td>
+              </tr>
+              <tr>
+                <td>Yerba Tradicional 1kg</td>
+                <td>YB-1K</td>
+                <td>Alimentos</td>
+                <td>35</td>
+                <td>40</td>
+                <td><span class="chip warn">Stock bajo</span></td>
+              </tr>
+              <tr>
+                <td>Detergente Limón 750ml</td>
+                <td>DT-750</td>
+                <td>Limpieza</td>
+                <td>10</td>
+                <td>30</td>
+                <td><span class="chip danger">Crítico</span></td>
+              </tr>
+              <tr>
+                <td>Arroz Largo Fino 1kg</td>
+                <td>AR-1K</td>
+                <td>Alimentos</td>
+                <td>122</td>
+                <td>50</td>
+                <td><span class="chip ok">Stock alto</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
