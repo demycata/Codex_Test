@@ -1,5 +1,8 @@
 const STORAGE_KEY = 'stockflow-products-v1';
 
+const { applyMovementToProduct, calculateStatus, filterProducts, getCategoryOptions, summarizeStats } =
+  window.StockflowCore;
+
 const demoProducts = [
   { id: 'p1', name: 'Agua Mineral 500ml', sku: 'AG-500', category: 'Bebidas', stock: 240, minimum: 80 },
   { id: 'p2', name: 'Yerba Tradicional 1kg', sku: 'YB-1K', category: 'Alimentos', stock: 35, minimum: 40 },
@@ -116,7 +119,7 @@ function renderAll() {
 }
 
 function renderCategoryFilter() {
-  const categories = ['Todas', ...new Set(state.products.map((item) => item.category))];
+  const categories = getCategoryOptions(state.products);
   const previous = state.filters.category;
 
   els.categoryFilter.innerHTML = categories
@@ -138,7 +141,7 @@ function renderMovementSelect() {
 }
 
 function renderTable() {
-  const filtered = getFilteredProducts();
+  const filtered = filterProducts(state.products, state.filters);
 
   els.inventoryBody.innerHTML = filtered
     .map((item) => {
@@ -174,51 +177,17 @@ function renderTable() {
 }
 
 function renderStats() {
-  const lowStock = state.products.filter((item) => item.stock <= item.minimum && item.stock > 0).length;
-  const critical = state.products.filter((item) => item.stock === 0 || item.stock <= Math.floor(item.minimum * 0.5)).length;
-  const totalUnits = state.products.reduce((sum, item) => sum + item.stock, 0);
-
-  els.statProducts.textContent = String(state.products.length);
-  els.statUnits.textContent = totalUnits.toLocaleString('es-AR');
-  els.statLow.textContent = String(lowStock);
-  els.statCritical.textContent = String(critical);
-}
-
-function getFilteredProducts() {
-  return state.products.filter((item) => {
-    const matchesText =
-      item.name.toLowerCase().includes(state.filters.text) ||
-      item.sku.toLowerCase().includes(state.filters.text);
-
-    const matchesCategory =
-      state.filters.category === 'Todas' || item.category === state.filters.category;
-
-    const status = calculateStatus(item).label;
-    const matchesStatus = state.filters.status === 'Todos' || status === state.filters.status;
-
-    return matchesText && matchesCategory && matchesStatus;
-  });
-}
-
-function calculateStatus(product) {
-  if (product.stock <= Math.floor(product.minimum * 0.5)) {
-    return { label: 'Crítico', level: 'danger' };
-  }
-  if (product.stock <= product.minimum) {
-    return { label: 'Stock bajo', level: 'warn' };
-  }
-  return { label: 'Stock alto', level: 'ok' };
+  const summary = summarizeStats(state.products);
+  els.statProducts.textContent = String(summary.totalProducts);
+  els.statUnits.textContent = summary.totalUnits.toLocaleString('es-AR');
+  els.statLow.textContent = String(summary.lowStock);
+  els.statCritical.textContent = String(summary.critical);
 }
 
 function applyMovement(id, type, amount) {
   const target = state.products.find((item) => item.id === id);
   if (!target) return;
-
-  if (type === 'entrada') {
-    target.stock += amount;
-  } else {
-    target.stock = Math.max(0, target.stock - amount);
-  }
+  applyMovementToProduct(target, type, amount);
 }
 
 function loadProducts() {
