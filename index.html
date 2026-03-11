@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StockFlow | Control de stock</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>StockFlow</h1>
+        <p>Control de stock · MVP testeable</p>
+      </div>
+      <button id="open-add-product" class="btn btn-primary">+ Nuevo producto</button>
+    </header>
+
+    <main class="layout">
+      <aside class="card filters">
+        <h2>Filtros</h2>
+        <label>
+          Buscar
+          <input id="search-input" type="search" placeholder="Nombre o SKU" />
+        </label>
+        <label>
+          Categoría
+          <select id="category-filter">
+            <option value="Todas">Todas</option>
+          </select>
+        </label>
+        <label>
+          Estado
+          <select id="status-filter">
+            <option value="Todos">Todos</option>
+            <option value="Stock alto">Stock alto</option>
+            <option value="Stock bajo">Stock bajo</option>
+            <option value="Crítico">Crítico</option>
+          </select>
+        </label>
+      </aside>
+
+      <section class="content">
+        <section class="stats-grid">
+          <article class="card stat">
+            <p>Total productos</p>
+            <strong id="stat-products">0</strong>
+          </article>
+          <article class="card stat">
+            <p>Unidades en stock</p>
+            <strong id="stat-units">0</strong>
+          </article>
+          <article class="card stat warning">
+            <p>Productos en stock bajo</p>
+            <strong id="stat-low">0</strong>
+          </article>
+          <article class="card stat danger">
+            <p>Productos críticos</p>
+            <strong id="stat-critical">0</strong>
+          </article>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <h2>Inventario actual</h2>
+            <div class="actions">
+              <button id="reset-data" class="btn">Restablecer demo</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>SKU</th>
+                  <th>Categoría</th>
+                  <th>Stock</th>
+                  <th>Mínimo</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="product-panel" class="card panel hidden">
+          <h2>Alta de producto</h2>
+          <form id="product-form" class="grid-form">
+            <label>
+              Nombre
+              <input name="name" required placeholder="Ej: Fideos 500g" />
+            </label>
+            <label>
+              SKU
+              <input name="sku" required placeholder="Ej: FD-500" />
+            </label>
+            <label>
+              Categoría
+              <input name="category" required placeholder="Ej: Alimentos" />
+            </label>
+            <label>
+              Stock inicial
+              <input name="stock" type="number" min="0" required value="0" />
+            </label>
+            <label>
+              Stock mínimo
+              <input name="minimum" type="number" min="0" required value="10" />
+            </label>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Guardar producto</button>
+              <button id="close-add-product" type="button" class="btn">Cerrar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card panel">
+          <h2>Movimiento rápido de stock</h2>
+          <form id="movement-form" class="grid-form movement-form">
+            <label>
+              Producto
+              <select id="movement-product" name="productId" required></select>
+            </label>
+            <label>
+              Tipo
+              <select name="type" required>
+                <option value="entrada">Entrada</option>
+                <option value="salida">Salida</option>
+              </select>
+            </label>
+            <label>
+              Cantidad
+              <input name="amount" type="number" min="1" required value="1" />
+            </label>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Aplicar movimiento</button>
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
