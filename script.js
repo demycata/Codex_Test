@@ -60,7 +60,7 @@ function bindEvents() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const product = {
-      id: crypto.randomUUID(),
+      id: createId(),
       name: formData.get('name').toString().trim(),
       sku: formData.get('sku').toString().trim().toUpperCase(),
       category: formData.get('category').toString().trim(),
@@ -91,6 +91,9 @@ function bindEvents() {
     const id = formData.get('productId').toString();
     const type = formData.get('type').toString();
     const amount = Number(formData.get('amount'));
+    if (!id || amount <= 0) {
+      return;
+    }
     applyMovement(id, type, amount);
     saveProducts();
     renderAll();
@@ -138,10 +141,22 @@ function renderMovementSelect() {
   els.movementProduct.innerHTML = state.products
     .map((item) => `<option value="${item.id}">${item.name} (${item.sku})</option>`)
     .join('');
+
+  const submitButton = els.movementForm.querySelector('button[type="submit"]');
+  submitButton.disabled = state.products.length === 0;
 }
 
 function renderTable() {
   const filtered = filterProducts(state.products, state.filters);
+
+  if (filtered.length === 0) {
+    els.inventoryBody.innerHTML = `
+      <tr>
+        <td colspan="7">No hay productos que coincidan con los filtros actuales.</td>
+      </tr>
+    `;
+    return;
+  }
 
   els.inventoryBody.innerHTML = filtered
     .map((item) => {
@@ -209,4 +224,11 @@ function loadProducts() {
 
 function saveProducts() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.products));
+}
+
+function createId() {
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID();
+  }
+  return `p-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
